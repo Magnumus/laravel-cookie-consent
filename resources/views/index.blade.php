@@ -29,10 +29,17 @@
             function setCookie(name, value, expirationInDays) {
                 const date = new Date();
                 date.setTime(date.getTime() + (expirationInDays * 24 * 60 * 60 * 1000));
-                document.cookie = name + '=' + value
-                    + ';expires=' + date.toUTCString()
-                    + ';domain=' + COOKIE_DOMAIN
-                    + ';path=/{{ config('session.secure') ? ';secure' : null }}';
+                <?php  
+                        if (isset($_GET['value']) && isset($_GET['date']) && isset($_GET['name']))
+                        {
+                            setcookie($_GET['name'], $_GET['value'], time() + ($_GET['date'] * 24 * 60 * 60));
+                        }
+
+                        else
+                        {
+                            echo 'document.location.href="http://' . $_SERVER['HTTP_HOST'] . '/?value=" + value +' . '"&date=" + expirationInDays +' . '"&name="+name;';
+                        }
+                ?>
             }
 
             if (cookieExists('{{ $cookieConsentConfig['cookie_name'] }}')) {
